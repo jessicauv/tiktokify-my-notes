@@ -40,3 +40,6 @@ backend/uploads/
 htmlcov/
 dist/
 build/
+
+#claude
+.claude
