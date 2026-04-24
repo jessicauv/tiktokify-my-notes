@@ -68,6 +68,10 @@ client = OpenAI(api_key=_openai_key) if _openai_key else None
 _elevenlabs_key = os.getenv("ELEVENLABS_API_KEY")
 elevenlabs_client = ElevenLabs(api_key=_elevenlabs_key) if _elevenlabs_key else None
 
+@app.get("/config")
+async def get_config():
+    return {"demo_mode": DEMO_MODE}
+
 @app.post("/upload")
 async def upload_file(file: UploadFile = File(...), style: int = Form(...), language: str = Form("English")):
     if not file.filename:

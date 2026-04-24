@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import style1 from "../assets/style1.png";
 import style2 from "../assets/style2.png";
 import style3 from "../assets/style3.png";
@@ -127,6 +127,16 @@ export default function PageTwo({ onGoBack, language }) {
   const [summary, setSummary] = useState("");
   const [audio, setAudio] = useState("");
   const [loading, setLoading] = useState(false);
+  const [demoMode, setDemoMode] = useState(false);
+
+  const API_URL = process.env.REACT_APP_API_URL || "https://tiktokify-my-notes.onrender.com";
+
+  useEffect(() => {
+    fetch(`${API_URL}/config`)
+      .then((res) => res.json())
+      .then((data) => setDemoMode(data.demo_mode))
+      .catch(() => {});
+  }, []);
 
   const handleFileSelect = (e) => {
     if (e.target.files.length > 0) {
@@ -154,17 +164,17 @@ export default function PageTwo({ onGoBack, language }) {
     setSummary("");
     setAudio("");
 
-    if (!fileName && !selectedStyle) {
+    if (!demoMode && !fileName && !selectedStyle) {
       setError(t.errorUploadAndStyle);
       return;
     }
 
-    if(!fileName) {
+    if (!demoMode && !fileName) {
       setError(t.errorUpload);
       return;
     }
 
-    if(!selectedStyle) {
+    if (!selectedStyle) {
       setError(t.errorStyle);
       return;
     }
@@ -173,7 +183,13 @@ export default function PageTwo({ onGoBack, language }) {
 
     try {
       const formData = new FormData();
-      formData.append("file", fileInputRef.current.files[0]);
+      if (demoMode) {
+        const res = await fetch('/ColdWar.txt');
+        const blob = await res.blob();
+        formData.append("file", new File([blob], "ColdWar.txt", { type: "text/plain" }));
+      } else {
+        formData.append("file", fileInputRef.current.files[0]);
+      }
       formData.append("style", selectedStyle);
       formData.append("language", language);
 
@@ -181,7 +197,7 @@ export default function PageTwo({ onGoBack, language }) {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout
 
-      const response = await fetch("https://tiktokify-my-notes.onrender.com/upload", {
+      const response = await fetch(`${API_URL}/upload`, {
         method: "POST",
         body: formData,
         signal: controller.signal,
@@ -240,6 +256,12 @@ export default function PageTwo({ onGoBack, language }) {
         </div>
       )}
 
+      {demoMode && (
+        <div className="w-full bg-yellow-300 text-yellow-900 text-center text-sm font-bold py-2 px-4 rounded-lg mb-2">
+          ⚠️ Demo Mode — API keys are not in use so fulL functionality is not enabled.
+        </div>
+      )}
+
       {/* Logo */}
       <div
         className="absolute top-3 sm:top-4 md:top-6 left-3 sm:left-4 md:left-6 flex items-center gap-1 sm:gap-2 text-[#fffacd] font-quicksand font-bold text-xs sm:text-sm md:text-base lg:text-xl cursor-pointer z-10"
@@ -251,28 +273,39 @@ export default function PageTwo({ onGoBack, language }) {
       </div>
 
       {/* Upload Notes */}
-      <div className="bg-[#fffacd] rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 mt-16 sm:mt-18 md:mt-20 flex flex-col sm:flex-row justify-between items-center gap-4 max-w-2xl mx-auto cursor-pointer hover:scale-105 transition-all duration-300" onMouseEnter={playHoverSound}>
-        <p className="text-orange-600 font-black uppercase text-lg sm:text-xl md:text-2xl text-center sm:text-left">
-          {t.uploadNotes}
-        </p>
-        <div className="flex flex-col items-center gap-2">
-          <button
-            className="bg-white px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-md shadow font-arial text-[#737373] text-sm sm:text-base"
-            onClick={() => fileInputRef.current.click()}
-          >
-            {t.chooseFile}
-          </button>
-          <p className="text-xs text-gray-600 font-arial text-center">{t.maxSize}</p>
-          {fileName && <span className="text-[#555555] font-medium font-arial text-xs sm:text-sm text-center break-all max-w-full">{fileName}</span>}
+      {demoMode ? (
+        <div className="bg-[#fffacd] rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 mt-16 sm:mt-18 md:mt-20 max-w-2xl mx-auto text-center">
+          <p className="text-orange-600 font-black uppercase text-lg sm:text-xl md:text-2xl">
+            {t.uploadNotes}
+          </p>
+          <p className="text-[#555555] font-arial text-sm sm:text-base mt-2">
+            Demo mode is active, so we'll use our default notes on the Cold War. No upload needed.
+          </p>
         </div>
-        <input
-          type="file"
-          accept=".txt,.pdf,.doc,.docx"
-          ref={fileInputRef}
-          onChange={handleFileSelect}
-          className="hidden"
-        />
-      </div>
+      ) : (
+        <div className="bg-[#fffacd] rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 mt-16 sm:mt-18 md:mt-20 flex flex-col sm:flex-row justify-between items-center gap-4 max-w-2xl mx-auto cursor-pointer hover:scale-105 transition-all duration-300" onMouseEnter={playHoverSound}>
+          <p className="text-orange-600 font-black uppercase text-lg sm:text-xl md:text-2xl text-center sm:text-left">
+            {t.uploadNotes}
+          </p>
+          <div className="flex flex-col items-center gap-2">
+            <button
+              className="bg-white px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-md shadow font-arial text-[#737373] text-sm sm:text-base"
+              onClick={() => fileInputRef.current.click()}
+            >
+              {t.chooseFile}
+            </button>
+            <p className="text-xs text-gray-600 font-arial text-center">{t.maxSize}</p>
+            {fileName && <span className="text-[#555555] font-medium font-arial text-xs sm:text-sm text-center break-all max-w-full">{fileName}</span>}
+          </div>
+          <input
+            type="file"
+            accept=".txt,.pdf,.doc,.docx"
+            ref={fileInputRef}
+            onChange={handleFileSelect}
+            className="hidden"
+          />
+        </div>
+      )}
 
       {/* Choose TikTok Style */}
       <div className="bg-[#fffacd] rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 mt-4 sm:mt-5 md:mt-6 max-w-2xl mx-auto cursor-pointer hover:scale-105 transition-all duration-300" onMouseEnter={playHoverSound}>
