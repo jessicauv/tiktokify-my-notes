@@ -46,7 +46,9 @@ The application is live and ready to use! No installation required.
 🔗<span style="color:#fe5900; font-weight:700;"> Access the app here:</span> [https://tiktokify-my-notes.vercel.app](https://tiktokify-my-notes.vercel.app)
 
 Note the following before you test
-- Please keep the notes uploaded short - Around 200 words (I'll only be generating an audio output of about 1 min so I don't use up all my credits)
+- As of 04/23/2026, DEMO MODE for the project is active so no API calls will be made. The project will use default notes on the Cold War instead and output pre-generated audio.
+
+Known Issue
 - The backend server times out after 15 mins of inactivity (because I'm on the free version). If so you will get the error: "Request timed out after 60 seconds. Please try again 🤠" Just give it a minute or two and retry
 
 ## Local Development Setup
@@ -59,11 +61,13 @@ Or if you would prefer to run this project locally, you need:
 - **Python:** v3.11.0 or higher
 - **pip:** Python package installer (comes with Python)
 
-### **API Keys** (Required)
+### **API Keys** (Only needed if running in normal mode)
 - **OpenAI API Key:** For GPT-4o-mini text generation
   - Get yours at: [https://platform.openai.com/api-keys](https://platform.openai.com/api-keys)
 - **ElevenLabs API Key:** For text-to-speech audio generation
   - Get yours at: [https://elevenlabs.io/app/settings/api-keys](https://elevenlabs.io/app/settings/api-keys)
+
+> **Note:** The project currently runs in Demo Mode by default — no API keys are required to run it locally or test the deployed app.
 
 ### **Key Dependencies**
 **Frontend:**
@@ -109,10 +113,19 @@ pip install -r requirements.txt
 ```
 
 #### **d) Set up environment variables**
-Create a `.env` file in the `backend/` directory:
+
+**Demo mode (default) — no API keys needed.**
+Create a `.env` file in the project root (next to `package.json`) with:
+```bash
+REACT_APP_API_URL=http://localhost:8000
+```
+This points the frontend at your local backend. The app will use pre-generated audio and default Cold War notes — no OpenAI or ElevenLabs calls are made.
+
+**Normal mode** — requires API keys. Create a `.env` file in the `backend/` directory with:
 ```bash
 OPENAI_API_KEY=your_openai_api_key_here
 ELEVENLABS_API_KEY=your_elevenlabs_api_key_here
+DEMO_MODE=0
 ```
 
 #### **e) Run the backend server**

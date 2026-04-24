@@ -24,7 +24,7 @@ app.add_middleware(
 )
 
 # Demo mode — set DEMO_MODE=1 to bypass all external API calls
-DEMO_MODE = os.getenv("DEMO_MODE", "0") == "1"
+DEMO_MODE = os.getenv("DEMO_MODE", "1") == "1"
 
 # Hardcoded demo scripts used when DEMO_MODE=1
 DEMO_SCRIPTS = {
