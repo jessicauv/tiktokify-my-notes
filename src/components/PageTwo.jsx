@@ -256,14 +256,6 @@ export default function PageTwo({ onGoBack, language }) {
         </div>
       )}
 
-      {demoMode && (
-        <div className="flex justify-center mb-2">
-          <div className="inline-block bg-yellow-300 text-yellow-900 text-sm font-bold py-2 px-4 rounded-lg">
-            ⚠️ Demo Mode — API keys are not in use so full functionality is not enabled.
-          </div>
-        </div>
-      )}
-
       {/* Logo */}
       <div
         className="absolute top-3 sm:top-4 md:top-6 left-3 sm:left-4 md:left-6 flex items-center gap-1 sm:gap-2 text-[#fffacd] font-quicksand font-bold text-xs sm:text-sm md:text-base lg:text-xl cursor-pointer z-10"
@@ -274,9 +266,17 @@ export default function PageTwo({ onGoBack, language }) {
         <span className="sm:hidden">TIKTOKIFY</span>
       </div>
 
+      {demoMode && (
+        <div className="flex justify-center mt-12 sm:mt-14 md:mt-16 mb-2">
+          <div className="inline-block bg-yellow-300 text-yellow-900 text-sm font-bold py-2 px-4 rounded-lg">
+            ⚠️ Demo Mode — API keys are not in use so full functionality is not enabled.
+          </div>
+        </div>
+      )}
+
       {/* Upload Notes */}
       {demoMode ? (
-        <div className="bg-[#fffacd] rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 mt-16 sm:mt-18 md:mt-20 max-w-2xl mx-auto text-center">
+        <div className="bg-[#fffacd] rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 mt-4 max-w-2xl mx-auto text-center">
           <p className="text-orange-600 font-black uppercase text-lg sm:text-xl md:text-2xl">
             {t.uploadNotes}
           </p>
