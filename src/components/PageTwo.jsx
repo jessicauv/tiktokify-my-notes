@@ -257,8 +257,10 @@ export default function PageTwo({ onGoBack, language }) {
       )}
 
       {demoMode && (
-        <div className="w-full bg-yellow-300 text-yellow-900 text-center text-sm font-bold py-2 px-4 rounded-lg mb-2">
-          ⚠️ Demo Mode — API keys are not in use so fulL functionality is not enabled.
+        <div className="flex justify-center mb-2">
+          <div className="inline-block bg-yellow-300 text-yellow-900 text-sm font-bold py-2 px-4 rounded-lg">
+            ⚠️ Demo Mode — API keys are not in use so full functionality is not enabled.
+          </div>
         </div>
       )}
 
@@ -278,8 +280,8 @@ export default function PageTwo({ onGoBack, language }) {
           <p className="text-orange-600 font-black uppercase text-lg sm:text-xl md:text-2xl">
             {t.uploadNotes}
           </p>
-          <p className="text-[#555555] font-arial text-sm sm:text-base mt-2">
-            Demo mode is active, so we'll use our default notes on the Cold War. No upload needed.
+          <p className="text-[#555555] font-bold text-sm mt-2">
+            Demo Mode - No need to upload notes, we'll use our default notes on the Cold War 🤠.
           </p>
         </div>
       ) : (
