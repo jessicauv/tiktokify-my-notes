@@ -118,6 +118,8 @@ const translations = {
   }
 };
 
+const API_URL = process.env.REACT_APP_API_URL || "https://tiktokify-my-notes.onrender.com";
+
 export default function PageTwo({ onGoBack, language }) {
   const t = translations[language] || translations.English;
   const fileInputRef = useRef(null);
@@ -128,8 +130,6 @@ export default function PageTwo({ onGoBack, language }) {
   const [audio, setAudio] = useState("");
   const [loading, setLoading] = useState(false);
   const [demoMode, setDemoMode] = useState(false);
-
-  const API_URL = process.env.REACT_APP_API_URL || "https://tiktokify-my-notes.onrender.com";
 
   useEffect(() => {
     fetch(`${API_URL}/config`)
